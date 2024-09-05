@@ -66,25 +66,5 @@ add_action('wp_footer', 'update_image_alt_tags_by_filename');
 
 
 
-function add_inline_custom_script() {
-    ?>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var anchorTag = document.querySelector('#block-30 a');
-        if (anchorTag) {
-            anchorTag.setAttribute('aria-label', 'Visit LinkedIn Profile');
-        }
-
-        var imgTag = document.querySelector('#block-30 img');
-        if (imgTag) {
-            imgTag.setAttribute('alt', 'LinkedIn Logo');
-        }
-    });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'add_inline_custom_script');
-
-
 
 ?>
