@@ -156,7 +156,7 @@ function update_gf_hidden_fields_utm_values() {
             const utmSource = urlParams.get('utm_source') || 'direct';
             const utmMedium = urlParams.get('utm_medium') || 'organic';
             const utmCampaign = urlParams.get('utm_campaign') || '';
-            const referrerUrl = document.referrer || 'direct';
+            const referrerUrl = urlParams.get('utm_referrer') || document.referrer || 'direct'; // Prioritize utm_referrer
             
             // console.log('Parameters:', {
             //     utm_source: utmSource,
