@@ -150,33 +150,53 @@ function update_gf_hidden_fields_utm_values() {
     ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Script loaded: UTM parameter processing started');
+            console.log('Script loaded: UTM and Referrer URL processing started at', new Date().toLocaleString('en-US', { timeZone: 'America/Denver' }));
             
             const urlParams = new URLSearchParams(window.location.search);
-            const utmSource = urlParams.get('utm_source') || 'direct';
-            const utmMedium = urlParams.get('utm_medium') || 'organic';
-            const utmCampaign = urlParams.get('utm_campaign') || '';
-            const referrerUrl = urlParams.get('utm_referrer') || document.referrer || 'direct'; // Prioritize utm_referrer
+
+            // Functions to get or set cookies
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function setCookie(name, value) {
+                document.cookie = `${name}=${value}; path=/`; // Session cookie (no expires)
+            }
+
+            // Process each parameter
+            const utmSource = urlParams.get('utm_source') || getCookie('utm_source') || 'direct';
+            const utmMedium = urlParams.get('utm_medium') || getCookie('utm_medium') || 'organic';
+            const utmCampaign = urlParams.get('utm_campaign') || getCookie('utm_campaign') || '';
+            const referrerUrl = urlParams.get('utm_referrer') || getCookie('utm_referrer') || 'direct';
             
-            // console.log('Parameters:', {
-            //     utm_source: utmSource,
-            //     utm_medium: utmMedium,
-            //     utm_campaign: utmCampaign,
-            //     referrer_url: referrerUrl
-            // });
+            // Save to session cookies (only if a query string parameter is present)
+            if (urlParams.get('utm_source')) setCookie('utm_source', utmSource);
+            if (urlParams.get('utm_medium')) setCookie('utm_medium', utmMedium);
+            if (urlParams.get('utm_campaign')) setCookie('utm_campaign', utmCampaign);
+            if (urlParams.get('utm_referrer')) setCookie('utm_referrer', referrerUrl);
             
+            console.log('Parameters:', {
+                utm_source: utmSource,
+                utm_medium: utmMedium,
+                utm_campaign: utmCampaign,
+                referrer_url: referrerUrl
+            });
+
             // Target fields by CSS class
             const sourceField = document.querySelector('.utm-source-field .ginput_container input');
             const mediumField = document.querySelector('.utm-medium-field .ginput_container input');
             const campaignField = document.querySelector('.utm-campaign-field .ginput_container input');
             const referrerField = document.querySelector('.referrer-url-field .ginput_container input');  
             
-            // console.log('Field Elements:', {
-            //     sourceField: sourceField,
-            //     mediumField: mediumField,
-            //     campaignField: campaignField,
-            //     referrerField: referrerField
-            // });
+            console.log('Field Elements:', {
+                sourceField: sourceField,
+                mediumField: mediumField,
+                campaignField: campaignField,
+                referrerField: referrerField
+            });
             
             if (sourceField) {
                 sourceField.value = utmSource;
