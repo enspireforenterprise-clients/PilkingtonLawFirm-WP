@@ -145,4 +145,90 @@ function add_custom_tracking_script() {
 // Hook into wp_footer to add the script just before </body>
 add_action('wp_footer', 'add_custom_tracking_script');
 
+// Update GF hidden fields for UTM Campaign, UTM Source, UTM Medium and Referrer
+function update_gf_hidden_fields_utm_values() {
+    ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Script loaded: UTM and Referrer URL processing started at', new Date().toLocaleString('en-US', { timeZone: 'America/Denver' }));
+            
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Functions to get or set cookies
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+                return null;
+            }
+
+            function setCookie(name, value) {
+                document.cookie = `${name}=${value}; path=/`; // Session cookie (no expires)
+            }
+
+            // Process each parameter
+            const utmSource = urlParams.get('utm_source') || getCookie('utm_source') || 'direct';
+            const utmMedium = urlParams.get('utm_medium') || getCookie('utm_medium') || 'organic';
+            const utmCampaign = urlParams.get('utm_campaign') || getCookie('utm_campaign') || '';
+            const referrerUrl = urlParams.get('utm_referrer') || getCookie('utm_referrer') || 'direct';
+            
+            // Save to session cookies (only if a query string parameter is present)
+            if (urlParams.get('utm_source')) setCookie('utm_source', utmSource);
+            if (urlParams.get('utm_medium')) setCookie('utm_medium', utmMedium);
+            if (urlParams.get('utm_campaign')) setCookie('utm_campaign', utmCampaign);
+            if (urlParams.get('utm_referrer')) setCookie('utm_referrer', referrerUrl);
+            
+            console.log('Parameters:', {
+                utm_source: utmSource,
+                utm_medium: utmMedium,
+                utm_campaign: utmCampaign,
+                referrer_url: referrerUrl
+            });
+
+            // Target fields by CSS class
+            const sourceField = document.querySelector('.utm-source-field .ginput_container input');
+            const mediumField = document.querySelector('.utm-medium-field .ginput_container input');
+            const campaignField = document.querySelector('.utm-campaign-field .ginput_container input');
+            const referrerField = document.querySelector('.referrer-url-field .ginput_container input');  
+            
+            console.log('Field Elements:', {
+                sourceField: sourceField,
+                mediumField: mediumField,
+                campaignField: campaignField,
+                referrerField: referrerField
+            });
+            
+            if (sourceField) {
+                sourceField.value = utmSource;
+                console.log('Set utm-source-field value to:', utmSource);
+            } else {
+                console.log('Error: .utm-source-field not found');
+            }
+            
+            if (mediumField) {
+                mediumField.value = utmMedium;
+                console.log('Set utm-medium-field value to:', utmMedium);
+            } else {
+                console.log('Error: .utm-medium-field not found');
+            }
+            
+            if (campaignField) {
+                campaignField.value = utmCampaign;
+                console.log('Set utm-campaign-field value to:', utmCampaign);
+            } else {
+                console.log('Error: .utm-campaign-field not found');
+            }
+        
+            if (referrerField) {
+                referrerField.value = referrerUrl;
+                console.log('Set referrer-url-field input value to:', referrerUrl);
+            } else {
+                console.log('Error: .referrer-url-field input not found');
+            }
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'update_gf_hidden_fields_utm_values');
+
 ?>
