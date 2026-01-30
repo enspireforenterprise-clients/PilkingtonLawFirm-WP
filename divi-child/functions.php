@@ -231,4 +231,41 @@ function update_gf_hidden_fields_utm_values() {
 }
 add_action('wp_footer', 'update_gf_hidden_fields_utm_values');
 
+
+
+// GNIX-16455 - Add Google Tag Manager script to head
+
+function add_gtm_script_to_head() {
+    ?>
+    <script>
+        (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),
+                dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KBGBD3HX');
+    </script>
+    <?php
+}
+add_action( 'wp_head', 'add_gtm_script_to_head' );
+
+
+function add_gtm_noscript_after_body_open() {
+    ?>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KBGBD3HX"
+                height="0"
+                width="0"
+                style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <?php
+}
+add_action( 'wp_body_open', 'add_gtm_noscript_after_body_open' );
+
+
+
 ?>
