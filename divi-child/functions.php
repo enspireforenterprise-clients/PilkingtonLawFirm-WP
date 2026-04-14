@@ -267,5 +267,17 @@ function add_gtm_noscript_after_body_open() {
 add_action( 'wp_body_open', 'add_gtm_noscript_after_body_open' );
 
 
+//GNIXENG-14500 - Shortcode to get the first segment of the URL path for location-based content
+
+function get_location_base_from_url() {
+    $request = trim( $_SERVER['REQUEST_URI'], '/' );
+ 
+    if ( empty( $request ) ) return '';
+ 
+    $segments = explode( '/', $request );
+ 
+    return '/' . $segments[0] . '/';
+}
+add_shortcode( 'location_base', 'get_location_base_from_url' );
 
 ?>
