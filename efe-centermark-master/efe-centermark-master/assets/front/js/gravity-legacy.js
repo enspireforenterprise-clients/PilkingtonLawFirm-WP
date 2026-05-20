@@ -132,6 +132,8 @@
         let input = form.querySelector('[name="' + key + '"]');
         if (!input || input.closest('.no-yotrack')) continue;
 
+         if (input.closest('.form-matadata')) continue;
+
         //  Skip hidden inputs EXCEPT metadata
         if (input.type === "hidden" && key.toLowerCase() !== "metadata") continue;
 
@@ -151,6 +153,8 @@
         if (!label) continue;
 
         let labelText = label.textContent.trim();
+
+        if (labelText.toLowerCase() === 'metadata') continue;
 
         //  Skip garbage labels like "1", "2", etc.
         if (!labelText || labelText.match(/^\d+$/)) continue;
