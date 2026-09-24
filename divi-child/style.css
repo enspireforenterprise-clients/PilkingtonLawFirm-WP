@@ -11,7 +11,24 @@
 /* =Theme customization starts here
 ------------------------------------------------------- */
 
-
+.gform-footer .gform_button {
+    font-size: 14px;
+    background-color: #e8e2af;
+    border-width: 0px !important;
+    border-color: #e8e2af;
+    border-radius: 50px;
+    font-weight: bold;
+    font-style: normal;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    padding: 17px 27px;
+    cursor: pointer;
+}
+.gform-footer .gform_button:hover{
+    background-color: #163c5d;
+        color: white;
+}
 
 .archive .et_pb_section_1.section_has_divider.et_pb_bottom_divider .et_pb_bottom_inside_divider
 {
